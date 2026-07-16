@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#132733" />
+    <meta name="description" content="Wildkin Frontier — a compact creature-crafting adventure." />
+    <title>Wildkin Frontier</title>
+  </head>
+  <body>
+    <main id="wildkin-app">
+      <canvas id="wildkin-canvas" tabindex="0" aria-label="Wildkin Frontier game world"></canvas>
+
+      <section id="game-hud" class="game-hud is-hidden" aria-label="Expedition status">
+        <div class="hud-topline">
+          <article class="quest-rail journal-card" aria-live="polite">
+            <div class="quest-rail__line"><i id="quest-trail-fill"></i></div>
+            <div class="quest-rail__copy">
+              <span id="quest-step" class="kicker">TRAIL 01 / 10</span>
+              <strong id="quest-title">Wake the frontier</strong>
+              <p id="quest-copy">Gather loose wood, stone, fiber, and sunfruit.</p>
+            </div>
+          </article>
+
+          <div class="world-readouts">
+            <span id="region-readout">SUNMEADOW</span>
+            <strong id="time-readout">DAY 01 · 08:00</strong>
+          </div>
+
+          <article class="party-card journal-card">
+            <div class="party-card__label"><span class="kicker">TRAIL PARTY</span><b id="roster-count">0 / 6</b></div>
+            <div id="party-strip" class="party-strip"><span class="party-empty">No Wildkin bonded</span></div>
+          </article>
+        </div>
+
+        <div id="target-card" class="target-card is-hidden" aria-live="polite">
+          <span id="target-kind" class="kicker">WILD / FORAGER</span>
+          <strong id="target-name">Burramble</strong>
+          <div class="target-health"><i id="target-health-fill"></i></div>
+          <small id="target-hint">Weaken, then hold C to Glimmerline</small>
+        </div>
+
+        <div id="capture-card" class="capture-card is-hidden" aria-live="assertive">
+          <span class="kicker">GLIMMERLINE</span>
+          <strong id="capture-chance">38%</strong>
+          <div class="capture-track"><i id="capture-fill"></i><b></b><b></b><b></b></div>
+          <small id="capture-modifiers">Clear sight · target resisting</small>
+        </div>
+
+        <div class="hud-bottomline">
+          <article class="vitals journal-card">
+            <div class="vital"><span>HEART</span><div><i id="health-fill"></i></div><b id="health-value">100</b></div>
+            <div class="vital vital--stamina"><span>BREATH</span><div><i id="stamina-fill"></i></div><b id="stamina-value">100</b></div>
+            <div class="vital vital--hunger"><span>HUNGER</span><div><i id="hunger-fill"></i></div><b id="hunger-value">100</b></div>
+          </article>
+
+          <div id="hotbar" class="hotbar journal-card" aria-label="Hotbar"></div>
+
+          <article class="action-card journal-card">
+            <span id="weapon-label" class="kicker">BARE HANDS</span>
+            <strong id="ammo-readout">—</strong>
+            <p id="interaction-hint"><kbd>E</kbd> collect · <kbd>C</kbd> Glimmerline · <kbd>B</kbd> build</p>
+          </article>
+        </div>
+
+        <div id="crosshair" class="crosshair" aria-hidden="true"><i></i><i></i><b></b></div>
+        <div id="damage-vignette" class="damage-vignette" aria-hidden="true"></div>
+      </section>
+
+      <section id="title-screen" class="title-screen screen-layer is-visible" aria-label="Wildkin Frontier main menu">
+        <img class="title-art" src="/assets/wildkin/wildkin-title.jpg" alt="Original Wildkin overlooking the Wayfarer Beacon" />
+        <div class="title-wash"></div>
+        <div class="title-copy">
+          <p class="kicker">A TEN-MINUTE FRONTIER TALE</p>
+          <h1>Wildkin<br /><em>Frontier</em></h1>
+          <p class="title-summary">Begin with empty hands. Befriend the island's odd little workers, raise a new generation, and bring the old beacon back to song.</p>
+          <div class="title-actions">
+            <button id="new-game-button" class="button button--primary">Begin a new trail <span>↗</span></button>
+            <button id="continue-button" class="button button--paper">Continue</button>
+          </div>
+          <button id="title-help-button" class="text-button">Controls &amp; accessibility</button>
+        </div>
+        <aside class="title-field-note">
+          <span class="field-note__number">01</span>
+          <p>Follow the braided trail:</p>
+          <strong>gather → bond → build → raise → restore</strong>
+        </aside>
+      </section>
+
+      <section id="inventory-panel" class="game-panel is-hidden" aria-modal="true" role="dialog" aria-labelledby="inventory-title">
+        <header class="panel-header"><div><span class="kicker">WAYFARER PACK</span><h2 id="inventory-title">Make the next thing matter.</h2></div><button class="icon-button" data-close-panel="inventory-panel" aria-label="Close inventory">×</button></header>
+        <nav class="panel-tabs" aria-label="Pack sections">
+          <button class="panel-tab is-active" data-inventory-tab="craft">Craft</button>
+          <button class="panel-tab" data-inventory-tab="pack">Pack</button>
+          <button class="panel-tab" data-inventory-tab="kin">Wildkin</button>
+        </nav>
+        <div id="craft-view" class="panel-view"><div id="recipe-grid" class="recipe-grid"></div></div>
+        <div id="pack-view" class="panel-view is-hidden"><div id="inventory-grid" class="inventory-grid"></div></div>
+        <div id="kin-view" class="panel-view is-hidden"><div class="kin-ledger"><img src="/assets/wildkin/wildkin-portraits.jpg" alt="Field-guide portraits of five original Wildkin species" /><div id="kin-roster" class="kin-roster"></div></div></div>
+      </section>
+
+      <section id="build-panel" class="game-panel game-panel--side is-hidden" aria-modal="true" role="dialog" aria-labelledby="build-title">
+        <header class="panel-header"><div><span class="kicker">CAMP PLAN</span><h2 id="build-title">Place a working home.</h2></div><button class="icon-button" data-close-panel="build-panel" aria-label="Close build panel">×</button></header>
+        <div id="structure-grid" class="structure-grid"></div>
+        <p class="panel-footnote">Select a plan, look at the ground, then click to place. <kbd>R</kbd> rotates; <kbd>Esc</kbd> cancels.</p>
+      </section>
+
+      <section id="work-panel" class="game-panel game-panel--compact is-hidden" aria-modal="true" role="dialog" aria-labelledby="work-title">
+        <header class="panel-header"><div><span class="kicker">FIELD CACHE</span><h2 id="work-title">Worker deposits</h2></div><button class="icon-button" data-close-panel="work-panel" aria-label="Close storage">×</button></header>
+        <div id="cache-grid" class="cache-grid"></div>
+        <button id="collect-cache-button" class="button button--primary">Collect all deposits</button>
+      </section>
+
+      <section id="nursery-panel" class="game-panel game-panel--compact is-hidden" aria-modal="true" role="dialog" aria-labelledby="nursery-title">
+        <header class="panel-header"><div><span class="kicker">NESTBLOOM</span><h2 id="nursery-title">Raise the next trailmate.</h2></div><button class="icon-button" data-close-panel="nursery-panel" aria-label="Close nursery">×</button></header>
+        <div id="nursery-content"></div>
+      </section>
+
+      <section id="onboarding-panel" class="modal-layer is-hidden" aria-modal="true" role="dialog" aria-labelledby="onboarding-title">
+        <div class="modal-card modal-card--wide"><span class="kicker">FIRST FIELD NOTE</span><h2 id="onboarding-title">Empty hands are enough.</h2><p>Gather loose supplies, make your first mechanisms, then weaken—not defeat—a Wildkin before holding the Glimmerline.</p><div class="control-map control-map--onboarding"><span><kbd>WASD</kbd> move</span><span><kbd>Mouse</kbd> drag / look</span><span><kbd>Space</kbd> jump</span><span><kbd>Shift</kbd> sprint</span><span><kbd>Ctrl</kbd> dodge</span><span><kbd>E</kbd> collect / use</span><span><kbd>LMB</kbd> attack</span><span><kbd>C</kbd> Glimmerline</span><span><kbd>B</kbd> build</span><span><kbd>Tab / I</kbd> pack</span><span><kbd>1–8</kbd> hotbar</span><span><kbd>Esc</kbd> pause</span></div><button id="begin-expedition-button" class="button button--primary">Step onto the trail</button></div>
+      </section>
+
+      <section id="pause-panel" class="modal-layer is-hidden" aria-modal="true" role="dialog" aria-labelledby="pause-title">
+        <div class="modal-card"><span class="kicker">TRAIL PAUSED</span><h2 id="pause-title">Let the meadow breathe.</h2><button id="resume-button" class="button button--primary">Return to the trail</button><button id="settings-button" class="button button--paper">Settings &amp; controls</button><button id="save-quit-button" class="button button--paper">Save and return to title</button></div>
+      </section>
+
+      <section id="settings-panel" class="modal-layer is-hidden" aria-modal="true" role="dialog" aria-labelledby="settings-title">
+        <div class="modal-card modal-card--wide"><header class="panel-header"><div><span class="kicker">FIELD NOTES</span><h2 id="settings-title">Controls &amp; comfort</h2></div><button class="icon-button" data-close-panel="settings-panel" aria-label="Close settings">×</button></header><div class="settings-grid"><label>Master volume <input id="volume-input" type="range" min="0" max="100" value="65" /></label><label>Look sensitivity <input id="sensitivity-input" type="range" min="40" max="140" value="85" /></label><label>Render scale <select id="render-scale"><option value="1">Full</option><option value="0.8">Balanced</option><option value="0.65">Battery saver</option></select></label><label class="check-line"><input id="reduced-motion" type="checkbox" /> Reduce motion</label></div><div class="control-map"><span><kbd>WASD</kbd> move</span><span><kbd>Mouse</kbd> drag / look</span><span><kbd>Space</kbd> jump</span><span><kbd>Shift</kbd> sprint</span><span><kbd>Ctrl</kbd> dodge</span><span><kbd>E</kbd> interact</span><span><kbd>LMB</kbd> attack</span><span><kbd>C</kbd> Glimmerline</span><span><kbd>B</kbd> build</span><span><kbd>Tab / I</kbd> pack</span><span><kbd>1–8</kbd> hotbar</span><span><kbd>Esc</kbd> pause</span></div></div>
+      </section>
+
+      <section id="reset-panel" class="modal-layer is-hidden" aria-modal="true" role="dialog" aria-labelledby="reset-title">
+        <div class="modal-card"><span class="kicker">START OVER</span><h2 id="reset-title">Leave this trail behind?</h2><p>This clears the local Wildkin save. The other games in this workspace are untouched.</p><button id="confirm-reset-button" class="button button--danger">Clear save and begin</button><button class="button button--paper" data-close-panel="reset-panel">Keep this trail</button></div>
+      </section>
+
+      <section id="victory-panel" class="modal-layer is-hidden" aria-modal="true" role="dialog" aria-labelledby="victory-title">
+        <div class="victory-card"><span class="kicker">THE BEACON SINGS AGAIN</span><h2 id="victory-title">A home, made together.</h2><p id="victory-copy">You arrived with nothing. The frontier answers with a chorus.</p><div id="victory-stats" class="victory-stats"></div><div class="victory-actions"><button id="continue-sandbox-button" class="button button--primary">Continue in sandbox</button><button id="new-run-button" class="button button--paper">Begin a new trail</button></div></div>
+      </section>
+
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      <div id="interaction-prompt" class="interaction-prompt is-hidden"></div>
+    </main>
+    <script type="module" src="/src/wildkin.js"></script>
+  </body>
+</html>
