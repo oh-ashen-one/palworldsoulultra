@@ -128,3 +128,34 @@ npm run build
 - Desktop keyboard and mouse are the supported inputs; touch controls and networking are outside this vertical slice.
 - The economy and island are deliberately compact for one complete sitting, not a long-form survival campaign.
 - Three.js is bundled with the game, so Vite may print its standard advisory for a JavaScript chunk larger than 500 kB.
+
+## Original `/goal` prompt — video archive
+
+This is the complete build prompt supplied to the `/goal` run that produced the repository. It is preserved here verbatim so the original brief, constraints, and definition of done are available for studio and video use.
+
+<details>
+<summary>Show the complete original goal prompt</summary>
+
+```text
+Build and verify “Wildkin Frontier,” a polished original single-player 3D browser game blending creature-survival automation, voxel gathering/building, and cozy life-sim beats. Ship an 8–12 minute vertical slice from empty inventory through survival, crafting, capture, automation, breeding, final upgrade, and victory, followed by sandbox play. Do not stop at a plan, mockup, or tech demo.
+
+Inspect the repo, AGENTS.md, and tools. Briefly research official Palworld gameplay sources only for high-level genre systems; record source links. Make all expression original: title, creatures, silhouettes, names, lore, UI, recipes, structures, capture method, world, art, audio, and code. Do not copy or closely imitate Palworld/Pokémon/Minecraft/ARK assets, characters, maps, logos, terms, UI, text, sounds, or data; never rip/download their assets.
+
+Preserve a viable stack. If blank, use Vite + TypeScript + Three.js with documented one-command run/build. Prefer procedural low-poly geometry, animation, particles, lighting/fog, compact terrain, and Web Audio. Favor polish and stability over breadth.
+
+GAME: Create a compact island with 3 readable areas, landmarks, resources, hazards, and an original guardian. Support mouse-look movement, jump/sprint, gathering wood/stone/fiber/food/ore, health/stamina/hunger, recipe crafting, place/rotate structures, combat/dodge, and forgiving respawn. Progress through original fantasy weapons: Wooden Springcaster → Stonebolt Launcher → Steel Repeater, gated by gathering, workbench, smelting, and steel.
+
+Create 4+ original 3D species with distinct silhouettes, attacks, stats, temperaments, and work skills. Players weaken and capture them with a visible original tether/snare; captures follow/fight or work at base. Include workbench, storage bin, feeder, nursery, farm, and forge. Workers visibly do suitable jobs, eat, deposit resources, and require player collection. Breeding uses two compatible adults plus food, produces a smaller baby in 45–75 seconds, mixes parental color/stat/work traits, and matures quickly.
+
+PACE: An optional quest chain teaches without blocking. Tune a blind run for capture by ~3 minutes, worker output by ~5, baby by ~7–9, then Steel Repeater plus guardian/beacon victory near minute 10. Avoid grind, soft locks, and idle waiting.
+
+ART: Read/follow the imagegen skill. Use built-in image generation for original title art and a small cohesive portrait/UI/texture set; prompts must not name/mimic franchises. Integrate and web-optimize output. Use only created/generated or clearly permissive assets and document provenance; keep gameplay readable in 3D.
+
+UX: WASD move; mouse look; Space jump; Shift sprint; E interact/collect; left-click attack; C tether; B build; Tab inventory/crafting; 1–8 hotbar; Esc pause. Show controls on first launch and pause. Include crosshair, quests, vitals, hotbar, prompts, recipe needs, capture feedback, worker/breeding status, victory, and volume. Every button works; layouts are readable at 1280×720 and 1440×900.
+
+SAVE: Autosave versioned state to localStorage. Continue/New Game/confirmed Reset work. Reload preserves inventory, structures, creatures, assignments, progress, and settings; corrupt saves fail safely.
+
+DONE: Add a concise README. Add deterministic systems tests and browser smoke/e2e or a debug-only harness proving: zero-inventory start; gather/craft/place; capture/deploy; worker deposit/collection; inherited baby; all weapons; combat/victory; save/reload/reset. Run build, tests, lint/typecheck. Launch/play the normal game, inspect console errors, and visually QA both sizes; fix clipping, contrast, camera, controls, performance, and gameplay. No exposed cheats, post-setup network dependency, broken controls, major TODOs, or fake buttons. Work autonomously, make reasonable assumptions, and parallelize only non-overlapping work. Finish only when the golden path passes; report features, commands/results, generated assets, limitations, and how to play.
+```
+
+</details>
